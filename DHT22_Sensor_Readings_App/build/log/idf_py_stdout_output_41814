@@ -1,0 +1,124 @@
+[1/15] Generating ../../ota_data_initial.bin
+[2/15] Generating ../../partition_table/partition-table.bin
+Partition table binary generated. Contents:
+*******************************************************************************
+# ESP-IDF Partition Table
+# Name, Type, SubType, Offset, Size, Flags
+nvs,data,nvs,0x9000,16K,
+otadata,data,ota,0xd000,8K,
+phy_init,data,phy,0xf000,4K,
+factory,app,factory,0x10000,1M,
+ota_0,app,ota_0,0x110000,1M,
+ota_1,app,ota_1,0x210000,1M,
+*******************************************************************************
+[3/15] Generating x509_crt_bundle
+[4/15] Generating ../../x509_crt_bundle.S
+[5/15] Building ASM object esp-idf/mbedtls/CMakeFiles/__idf_mbedtls.dir/__/__/x509_crt_bundle.S.obj
+[6/15] Linking C static library esp-idf/mbedtls/libmbedtls.a
+[7/15] Performing configure step for 'bootloader'
+-- Building ESP-IDF components for target esp32
+-- Project sdkconfig file /Users/vikramkarmarkar/esp-workspace/udemy_esp32/sdkconfig
+-- Compiler supported targets: xtensa-esp-elf
+-- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/soc/esp32/ld/esp32.peripherals.ld
+-- Bootloader project name: "bootloader" version: 1
+-- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_rom/esp32/ld/esp32.rom.ld
+-- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_rom/esp32/ld/esp32.rom.api.ld
+-- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_rom/esp32/ld/esp32.rom.libgcc.ld
+-- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_rom/esp32/ld/esp32.rom.newlib-funcs.ld
+-- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/main/ld/esp32/bootloader.ld
+-- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/main/ld/esp32/bootloader.rom.ld
+-- Components: bootloader bootloader_support efuse esp_app_format esp_bootloader_format esp_common esp_hw_support esp_rom esp_security esp_system esptool_py freertos hal log main micro-ecc newlib partition_table soc spi_flash xtensa
+-- Component paths: /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader_support /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/efuse /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_app_format /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_bootloader_format /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_common /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_hw_support /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_rom /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_security /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_system /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/freertos /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/hal /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/log /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/main /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/components/micro-ecc /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/newlib /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/partition_table /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/soc /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/spi_flash /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/xtensa
+-- Configuring done (1.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/bootloader
+[8/15] Performing build step for 'bootloader'
+[1/2] Generating binary image from built executable
+esptool.py v4.8.1
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/bootloader/bootloader.bin
+[2/2] cd /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/bootloader/esp-idf/esptool_py && /Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/bootloader/bootloader.bin
+Bootloader binary size 0x6560 bytes. 0xaa0 bytes (9%) free.
+[9/15] No install step for 'bootloader'
+[10/15] Completed 'bootloader'
+[11/15] Generating ld/sections.ld
+[12/15] Linking CXX executable udemy_esp32_app.elf
+[13/15] Generating binary image from built executable
+esptool.py v4.8.1
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/udemy_esp32_app.bin
+[14/15] cd /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esptool_py && /Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/partition_table/partition-table.bin /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/udemy_esp32_app.bin
+udemy_esp32_app.bin binary size 0xb95d0 bytes. Smallest app partition is 0x100000 bytes. 0x46a30 bytes (28%) free.
+[14/15] cd /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py && /Users/vikramkarmarkar/.espressif/tools/cmake/3.30.2/CMake.app/Contents/bin/cmake -D IDF_PATH=/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4 -D "SERIAL_TOOL=/Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python;;/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/esptool/esptool.py;--chip;esp32" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build -P /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32 -p /dev/cu.usbserial-0001 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 40m --flash_size detect 0x1000 bootloader/bootloader.bin 0x10000 udemy_esp32_app.bin 0x8000 partition_table/partition-table.bin 0xd000 ota_data_initial.bin
+esptool.py v4.8.1
+Serial port /dev/cu.usbserial-0001
+Connecting....
+Chip is ESP32-D0WD-V3 (revision v3.1)
+Features: WiFi, BT, Dual Core, 240MHz, VRef calibration in efuse, Coding Scheme None
+Crystal is 40MHz
+MAC: f4:65:0b:4a:99:c8
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Auto-detected Flash size: 4MB
+Flash will be erased from 0x00001000 to 0x00007fff...
+Flash will be erased from 0x00010000 to 0x000c9fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000d000 to 0x0000efff...
+SHA digest in image updated
+Compressed 25952 bytes to 16369...
+Writing at 0x00001000... (100 %)
+Wrote 25952 bytes (16369 compressed) at 0x00001000 in 0.7 seconds (effective 293.4 kbit/s)...
+Hash of data verified.
+Compressed 759248 bytes to 480423...
+Writing at 0x00010000... (3 %)
+Writing at 0x0001c74e... (6 %)
+Writing at 0x000252ea... (10 %)
+Writing at 0x0002f980... (13 %)
+Writing at 0x000353e5... (16 %)
+Writing at 0x0003b2c9... (20 %)
+Writing at 0x00040cb4... (23 %)
+Writing at 0x00046617... (26 %)
+Writing at 0x0004c1f6... (30 %)
+Writing at 0x00051e77... (33 %)
+Writing at 0x00057ece... (36 %)
+Writing at 0x0005d9ec... (40 %)
+Writing at 0x00063b74... (43 %)
+Writing at 0x00068d41... (46 %)
+Writing at 0x0006e077... (50 %)
+Writing at 0x00073914... (53 %)
+Writing at 0x00078fae... (56 %)
+Writing at 0x0007e28c... (60 %)
+Writing at 0x00083a99... (63 %)
+Writing at 0x00089799... (66 %)
+Writing at 0x0008ef31... (70 %)
+Writing at 0x00094cb8... (73 %)
+Writing at 0x0009a6a7... (76 %)
+Writing at 0x000a0025... (80 %)
+Writing at 0x000a97f3... (83 %)
+Writing at 0x000b0766... (86 %)
+Writing at 0x000b66f8... (90 %)
+Writing at 0x000bc1a7... (93 %)
+Writing at 0x000c23a4... (96 %)
+Writing at 0x000c76d3... (100 %)
+Wrote 759248 bytes (480423 compressed) at 0x00010000 in 11.9 seconds (effective 512.1 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 138...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (138 compressed) at 0x00008000 in 0.1 seconds (effective 366.8 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 31...
+Writing at 0x0000d000... (100 %)
+Wrote 8192 bytes (31 compressed) at 0x0000d000 in 0.0 seconds (effective 1713.8 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
