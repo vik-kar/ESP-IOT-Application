@@ -7,9 +7,8 @@ Partition table binary generated. Contents:
 nvs,data,nvs,0x9000,16K,
 otadata,data,ota,0xd000,8K,
 phy_init,data,phy,0xf000,4K,
-factory,app,factory,0x10000,1M,
-ota_0,app,ota_0,0x110000,1M,
-ota_1,app,ota_1,0x210000,1M,
+ota_0,app,ota_0,0x10000,1984K,
+ota_1,app,ota_1,0x200000,1984K,
 *******************************************************************************
 [3/15] Generating x509_crt_bundle
 [4/15] Generating ../../x509_crt_bundle.S
@@ -29,7 +28,7 @@ ota_1,app,ota_1,0x210000,1M,
 -- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/main/ld/esp32/bootloader.rom.ld
 -- Components: bootloader bootloader_support efuse esp_app_format esp_bootloader_format esp_common esp_hw_support esp_rom esp_security esp_system esptool_py freertos hal log main micro-ecc newlib partition_table soc spi_flash xtensa
 -- Component paths: /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader_support /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/efuse /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_app_format /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_bootloader_format /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_common /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_hw_support /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_rom /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_security /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_system /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/freertos /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/hal /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/log /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/main /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/components/micro-ecc /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/newlib /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/partition_table /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/soc /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/spi_flash /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/xtensa
--- Configuring done (1.3s)
+-- Configuring done (1.4s)
 -- Generating done (0.0s)
 -- Build files have been written to: /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/bootloader
 [8/15] Performing build step for 'bootloader'
@@ -52,7 +51,7 @@ Merged 2 ELF sections
 Successfully created esp32 image.
 Generated /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/udemy_esp32_app.bin
 [14/15] cd /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esptool_py && /Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/partition_table/partition-table.bin /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/udemy_esp32_app.bin
-udemy_esp32_app.bin binary size 0xb95d0 bytes. Smallest app partition is 0x100000 bytes. 0x46a30 bytes (28%) free.
+udemy_esp32_app.bin binary size 0x10a2f0 bytes. Smallest app partition is 0x1f0000 bytes. 0xe5d10 bytes (46%) free.
 [14/15] cd /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py && /Users/vikramkarmarkar/.espressif/tools/cmake/3.30.2/CMake.app/Contents/bin/cmake -D IDF_PATH=/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4 -D "SERIAL_TOOL=/Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python;;/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/esptool/esptool.py;--chip;esp32" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build -P /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/run_serial_tool.cmake
 esptool.py --chip esp32 -p /dev/cu.usbserial-0001 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 40m --flash_size detect 0x1000 bootloader/bootloader.bin 0x10000 udemy_esp32_app.bin 0x8000 partition_table/partition-table.bin 0xd000 ota_data_initial.bin
 esptool.py v4.8.1
@@ -70,54 +69,59 @@ Changed.
 Configuring flash size...
 Auto-detected Flash size: 4MB
 Flash will be erased from 0x00001000 to 0x00007fff...
-Flash will be erased from 0x00010000 to 0x000c9fff...
+Flash will be erased from 0x00010000 to 0x0011afff...
 Flash will be erased from 0x00008000 to 0x00008fff...
 Flash will be erased from 0x0000d000 to 0x0000efff...
 SHA digest in image updated
-Compressed 25952 bytes to 16369...
+Compressed 25952 bytes to 16366...
 Writing at 0x00001000... (100 %)
-Wrote 25952 bytes (16369 compressed) at 0x00001000 in 0.7 seconds (effective 293.4 kbit/s)...
+Wrote 25952 bytes (16366 compressed) at 0x00001000 in 0.7 seconds (effective 278.9 kbit/s)...
 Hash of data verified.
-Compressed 759248 bytes to 480423...
-Writing at 0x00010000... (3 %)
-Writing at 0x0001c74e... (6 %)
-Writing at 0x000252ea... (10 %)
-Writing at 0x0002f980... (13 %)
-Writing at 0x000353e5... (16 %)
-Writing at 0x0003b2c9... (20 %)
-Writing at 0x00040cb4... (23 %)
-Writing at 0x00046617... (26 %)
-Writing at 0x0004c1f6... (30 %)
-Writing at 0x00051e77... (33 %)
-Writing at 0x00057ece... (36 %)
-Writing at 0x0005d9ec... (40 %)
-Writing at 0x00063b74... (43 %)
-Writing at 0x00068d41... (46 %)
-Writing at 0x0006e077... (50 %)
-Writing at 0x00073914... (53 %)
-Writing at 0x00078fae... (56 %)
-Writing at 0x0007e28c... (60 %)
-Writing at 0x00083a99... (63 %)
-Writing at 0x00089799... (66 %)
-Writing at 0x0008ef31... (70 %)
-Writing at 0x00094cb8... (73 %)
-Writing at 0x0009a6a7... (76 %)
-Writing at 0x000a0025... (80 %)
-Writing at 0x000a97f3... (83 %)
-Writing at 0x000b0766... (86 %)
-Writing at 0x000b66f8... (90 %)
-Writing at 0x000bc1a7... (93 %)
-Writing at 0x000c23a4... (96 %)
-Writing at 0x000c76d3... (100 %)
-Wrote 759248 bytes (480423 compressed) at 0x00010000 in 11.9 seconds (effective 512.1 kbit/s)...
+Compressed 1090288 bytes to 572408...
+Writing at 0x00010000... (2 %)
+Writing at 0x0001cc00... (5 %)
+Writing at 0x00023ef6... (8 %)
+Writing at 0x00045f75... (11 %)
+Writing at 0x00055690... (14 %)
+Writing at 0x0006264d... (17 %)
+Writing at 0x0006b405... (20 %)
+Writing at 0x00076a28... (22 %)
+Writing at 0x0007c44b... (25 %)
+Writing at 0x00082159... (28 %)
+Writing at 0x000878f1... (31 %)
+Writing at 0x0008d83e... (34 %)
+Writing at 0x0009322f... (37 %)
+Writing at 0x00098c24... (40 %)
+Writing at 0x0009e895... (42 %)
+Writing at 0x000a43e3... (45 %)
+Writing at 0x000aa216... (48 %)
+Writing at 0x000b019f... (51 %)
+Writing at 0x000b666a... (54 %)
+Writing at 0x000bb917... (57 %)
+Writing at 0x000c0be8... (60 %)
+Writing at 0x000c6312... (62 %)
+Writing at 0x000cbabb... (65 %)
+Writing at 0x000d0de7... (68 %)
+Writing at 0x000d6347... (71 %)
+Writing at 0x000dc07d... (74 %)
+Writing at 0x000e1852... (77 %)
+Writing at 0x000e7598... (80 %)
+Writing at 0x000ed458... (82 %)
+Writing at 0x000f31ca... (85 %)
+Writing at 0x000f8a7e... (88 %)
+Writing at 0x00102220... (91 %)
+Writing at 0x0010927e... (94 %)
+Writing at 0x0010f7b3... (97 %)
+Writing at 0x00114fee... (100 %)
+Wrote 1090288 bytes (572408 compressed) at 0x00010000 in 15.7 seconds (effective 554.6 kbit/s)...
 Hash of data verified.
-Compressed 3072 bytes to 138...
+Compressed 3072 bytes to 128...
 Writing at 0x00008000... (100 %)
-Wrote 3072 bytes (138 compressed) at 0x00008000 in 0.1 seconds (effective 366.8 kbit/s)...
+Wrote 3072 bytes (128 compressed) at 0x00008000 in 0.1 seconds (effective 365.5 kbit/s)...
 Hash of data verified.
 Compressed 8192 bytes to 31...
 Writing at 0x0000d000... (100 %)
-Wrote 8192 bytes (31 compressed) at 0x0000d000 in 0.0 seconds (effective 1713.8 kbit/s)...
+Wrote 8192 bytes (31 compressed) at 0x0000d000 in 0.1 seconds (effective 852.0 kbit/s)...
 Hash of data verified.
 
 Leaving...
