@@ -3,6 +3,11 @@
 
 #include "portmacro.h"
 
+/* Define statuses for OTA */
+#define OTA_UPDATE_PENDING		0
+#define OTA_UPDATE_SUCCESSFUL	1
+#define OTA_UPDATE_FAILED		-1
+ 
 /* Messages for the HTTP monitor */
 typedef enum http_server_message{
 	HTTP_MSG_WIFI_CONNECT_INIT = 0,
@@ -29,5 +34,8 @@ void http_server_start(void);
 
 /* Function that stops the HTTP server */
 void http_server_stop(void);
+
+/* Define a timer callback function that calls esp_restart upon successful firmware update */
+void http_server_fw_update_reset_callback(void *arg);
 
 #endif /* MAIN_HTTP_SERVER_H_ */
