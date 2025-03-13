@@ -9,7 +9,8 @@ var otaTimerVar =  null;
  */
 $(document).ready(function(){
 	getUpdateStatus();
-});   
+    startDHTSensorInterval();
+});    
 
 /**
  * Gets file name and size for display on the web page.
@@ -114,6 +115,19 @@ function otaRebootTimer()
 	{
         otaTimerVar = setTimeout(otaRebootTimer, 1000);
     }
+}
+
+/* Gets the DHT22 temp/humidity values for display on the webpage */
+function getDHTSensorValues(){
+    $.getJSON('/dhtSensor.json', function(data){
+        $("#temperature_reading").text(data["temp"]);
+        $("#humidity_reading").text(data["humidity"]);
+    });
+}
+
+/* Sets the interval for getting the updated sensor readings */
+function startDHTSensorInterval(){
+    setInterval(getDHTSensorValues, 5000);
 }
 
 

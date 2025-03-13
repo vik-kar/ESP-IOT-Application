@@ -1195,7 +1195,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/main/libmain.a",
-            "sources": [ "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/main.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/rgb_led.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/wifi_app.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/http_server.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/app.css.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/app.js.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/favicon.ico.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/index.html.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/jquery-3.3.1.min.js.S" ],
+            "sources": [ "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/main.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/rgb_led.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/wifi_app.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/http_server.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/main/DHT22.c", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/app.css.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/app.js.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/favicon.ico.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/index.html.S", "/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/jquery-3.3.1.min.js.S" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {
