@@ -15,6 +15,9 @@ $(document).ready(function(){
     $("#connect_wifi").on("click", function(){
     checkCredentials();
     });
+    $("#disconnect_wifi").on("click", function(){
+    disconnectWifi();
+});
 });    
 
 /**
@@ -252,3 +255,16 @@ function getConnectInfo(){
     });
 }
 
+/* Disconnects WiFi once the disconnect button is pressed, and reloads the webpage after 2000ms (2 sec) */
+function disconnectWifi(){
+    $.ajax({
+        url: '/wifiDisconnect.json',
+        dataType: 'json',
+        method: 'DELETE',
+        cache: false,
+        data: {'timestamp': Date.now()}
+    });
+
+    /* Update the webpage */
+    setTimeout("location.reload(true);", 2000);
+}

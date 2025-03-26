@@ -7,6 +7,7 @@
 #include "esp_timer.h"
 #include "esp_wifi_types_generic.h"
 #include "freertos/idf_additions.h"
+#include "http_parser.h"
 #include "portmacro.h"
 #include "protocomm_httpd.h"
 #include "tasks_common.h"
@@ -455,6 +456,18 @@ static esp_err_t http_server_get_wifi_connect_info_json_handler(httpd_req_t *req
 	return ESP_OK;
 }
 
+/* WiFi disconnect.json handler handles the click of the disconnect button 
+   @param req HTTP request for which the URI needs to be handled
+   @ret ESP_OK
+*/
+static esp_err_t http_server_wifi_disconnect_json_handler(httpd_req_t *req){
+	ESP_LOGI(TAG, "/wifiDisconnect.json requested");
+	
+	wifi_app_send_message(WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT);
+	
+	return ESP_OK;
+}
+
 /* Sets up the default HTTPD server configuration 
    @return http server instance handle if successful, null otherwise
 */
@@ -591,6 +604,15 @@ static httpd_handle_t http_server_configure(void){
 			.user_ctx = NULL,
 		};
 		httpd_register_uri_handler(http_server_handle, &wifi_connect_info_json);
+		
+		/* Register the handler to disconnect WiFi */
+		httpd_uri_t wifi_disconnect_json = {
+			.uri = "/wifiDisconnect.json",
+			.method = HTTP_DELETE,
+			.handler = http_server_wifi_disconnect_json_handler,
+			.user_ctx = NULL,
+		};
+		httpd_register_uri_handler(http_server_handle, &wifi_disconnect_json);
 		
 		ESP_LOGI(TAG, "http_server_configure: Registered URI handlers");
 		
