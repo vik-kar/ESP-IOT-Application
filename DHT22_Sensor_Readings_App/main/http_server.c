@@ -2,8 +2,10 @@
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "http_server.h"
+#include "esp_netif_ip_addr.h"
 #include "esp_partition.h"
 #include "esp_timer.h"
+#include "esp_wifi_types_generic.h"
 #include "freertos/idf_additions.h"
 #include "portmacro.h"
 #include "protocomm_httpd.h"
@@ -12,9 +14,13 @@
 #include "esp_ota_ops.h"
 #include "sys/param.h"
 #include "DHT22.h"
+#include "esp_wifi.h"
 
 /* Tag used for ESP serial console messages */
 static const char TAG[] = "http_server";
+
+/* WiFi connect status */
+static int g_wifi_connect_status = NONE;
 
 /* Global var for fw update status */
 static int g_fw_update_status = OTA_UPDATE_PENDING;
@@ -87,25 +93,34 @@ static void http_server_monitor(void *parameter){
 			switch(msg.msgID){
 				case HTTP_MSG_WIFI_CONNECT_INIT:
 					ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_INIT");
+					g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECTING;
 					break;
+					
 				case HTTP_MSG_WIFI_CONNECT_SUCCESS:
 					ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_SUCCESS");
+					g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_SUCCESS;
 					break;
+					
 				case HTTP_MSG_WIFI_CONNECT_FAIL:
 					ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_FAIL");
+					g_wifi_connect_status = HTTP_MSG_WIFI_CONNECT_FAIL;
 					break;
+					
 				case HTTP_MSG_OTA_UPDATE_SUCCESSFUL:
 					ESP_LOGI(TAG, "HTTP_MSG_OTA_UPDATE_SUCCESSFUL");
 					g_fw_update_status = OTA_UPDATE_SUCCESSFUL; 
 					http_server_fw_update_reset_timer();
 					break;
+					
 				case HTTP_MSG_OTA_UPDATE_FAILED:
 					ESP_LOGI(TAG, "HTTP_MSG_OTA_UPDATE_FAILED");
 					g_fw_update_status = OTA_UPDATE_FAILED; 
 					break;
+					
 				case HTTP_MSG_OTA_UPDATE_INITIALIZED:
 					ESP_LOGI(TAG, "HTTP_MSG_OTA_UPDATE_INITIALIZED");
 					break;
+					
 				default:
 					break;
 			}
@@ -333,7 +348,112 @@ static esp_err_t http_server_get_dht_sensor_readings_json_handler(httpd_req_t *r
 	return ESP_OK;
 }
 
+/* this handler is invoked after the connect button is pressed - handles receiving the SSID and password entered by the user
+   @param req HTTP request for which the URI needs to be handled
+   @ret ESP_OK
+*/
+static esp_err_t http_server_wifi_connect_json_handler(httpd_req_t *req){
+	ESP_LOGI(TAG, "/wifiConnect.json requested");
+	
+	/* Define vars for SSID and pwd. Need char * to hold the strings that we get */
+	size_t len_ssid = 0, len_pass = 0;
+	char* ssid_str = NULL, *pass_str = NULL;
+	
+	/* get SSID header */
+	len_ssid = httpd_req_get_hdr_value_len(req, "my-connect-ssid") + 1;
+	if(len_ssid > 1){
+		
+		/* ssid_str should be allocated memory for length of len_ssid */
+		ssid_str = malloc(len_ssid);
+		
+		if(httpd_req_get_hdr_value_str(req, "my-connect-ssid", ssid_str, len_ssid) == ESP_OK){
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: found header for my-connect-ssid: %s", ssid_str);
+		}
+	}
+	/* get password header */
+	len_pass = httpd_req_get_hdr_value_len(req, "my-connect-pwd") + 1;
+	if(len_pass > 1){
+		
+		/* ssid_str should be allocated memory for length of len_ssid */
+		pass_str = malloc(len_pass);
+		
+		if(httpd_req_get_hdr_value_str(req, "my-connect-pwd", pass_str, len_pass) == ESP_OK){
+			ESP_LOGI(TAG, "http_server_wifi_connect_json_handler: found header for my-connect-pass: %s", pass_str);
+		}
+	}
+	
+	/* Now that we have the ssid and password, we can update the wifi network's configuration and let the wifi app know */
+	wifi_config_t* wifi_config = wifi_app_get_wifi_config();
+	memset(wifi_config, 0x00, sizeof(wifi_config_t));
+	memcpy(wifi_config->sta.ssid, ssid_str, len_ssid);
+	memcpy(wifi_config->sta.password, pass_str, len_pass);
+	
+	/* Send the WiFi app message */
+	wifi_app_send_message(WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER);
+	
+	free(ssid_str);
+	free(pass_str);
+	
+	return ESP_OK;
+}
 
+/* WiFi connect status handler updates the connection status for the webpage 
+   @param req HTTP request for which the URI needs to be handled
+   @ret ESP_OK
+*/
+static esp_err_t http_server_wifi_connect_status_json_handler(httpd_req_t *req){
+	ESP_LOGI(TAG, "/wifiConnectStatus requested");
+	char statusJSON[100];
+	sprintf(statusJSON, "{\"wifi_connect_status\":%d}", g_wifi_connect_status);
+
+	httpd_resp_set_type(req, "application/json");
+	httpd_resp_send(req, statusJSON, strlen(statusJSON));
+
+	return ESP_OK;
+}
+
+/* WiFi connect info.json handler updates the webpage with connection information 
+   @param req HTTP request for which the URI needs to be handled
+   @ret ESP_OK
+*/
+static esp_err_t http_server_get_wifi_connect_info_json_handler(httpd_req_t *req){
+	ESP_LOGI(TAG, "/wifiConnectInfo.json requested");
+	char ipInfoJSON[200];
+	memset(ipInfoJSON, 0, sizeof(ipInfoJSON));
+	
+	/* Buffer to hold IP address - IP4ADDR_STRLEN_MAX is predefiend */
+	char ip[IP4ADDR_STRLEN_MAX];
+	char netmask[IP4ADDR_STRLEN_MAX];
+	char gw[IP4ADDR_STRLEN_MAX];
+	
+	if(g_wifi_connect_status == HTTP_WIFI_STATUS_CONNECT_SUCCESS){
+		wifi_ap_record_t wifi_data;
+		ESP_ERROR_CHECK(esp_wifi_sta_get_ap_info(&wifi_data));
+		
+		char *ssid = (char *)wifi_data.ssid;
+		
+		/* esp_netif_sta is our station object */
+		esp_netif_ip_info_t ip_info;
+		ESP_ERROR_CHECK(esp_netif_get_ip_info(esp_netif_sta, &ip_info));
+		
+		/* Convert IP to human readable 
+		   @params
+		   - reference to ip_info.ip
+		   - ip buffer
+		   - length of ip address
+		*/
+		esp_ip4addr_ntoa(&ip_info.ip, ip, IP4ADDR_STRLEN_MAX);
+		esp_ip4addr_ntoa(&ip_info.netmask, netmask, IP4ADDR_STRLEN_MAX);
+		esp_ip4addr_ntoa(&ip_info.gw, gw, IP4ADDR_STRLEN_MAX);
+		
+		sprintf(ipInfoJSON, "{\"ip\":\"%s\",\"netmask\":\"%s\",\"gw\":\"%s\",\"ap\":\"%s\"}", ip, netmask, gw, ssid);
+	}
+	/* Set response for the outgoing response */
+	httpd_resp_set_type(req, "application/json");
+	httpd_resp_send(req, ipInfoJSON, strlen(ipInfoJSON));
+	
+	return ESP_OK;
+}
 
 /* Sets up the default HTTPD server configuration 
    @return http server instance handle if successful, null otherwise
@@ -444,6 +564,33 @@ static httpd_handle_t http_server_configure(void){
 			.user_ctx = NULL,
 		};
 		httpd_register_uri_handler(http_server_handle, &dht_sensor_json);
+		
+		/* Register wifi_connect.json handler */
+		httpd_uri_t wifi_connect_json = {
+			.uri = "/wifiConnect.json",
+			.method = HTTP_POST,
+			.handler = http_server_wifi_connect_json_handler,
+			.user_ctx = NULL,
+		};
+		httpd_register_uri_handler(http_server_handle, &wifi_connect_json);
+		
+		/* Register wifi_connectStatus.json handler */
+		httpd_uri_t wifi_connect_status_json = {
+			.uri = "/wifiConnectStatus",
+			.method = HTTP_POST,
+			.handler = http_server_wifi_connect_status_json_handler,
+			.user_ctx = NULL,
+		};
+		httpd_register_uri_handler(http_server_handle, &wifi_connect_status_json);
+		
+		/* Register wifiConnectInfo.json handler */
+		httpd_uri_t wifi_connect_info_json = {
+			.uri = "/wifiConnectInfo.json",
+			.method = HTTP_GET,
+			.handler = http_server_get_wifi_connect_info_json_handler,
+			.user_ctx = NULL,
+		};
+		httpd_register_uri_handler(http_server_handle, &wifi_connect_info_json);
 		
 		ESP_LOGI(TAG, "http_server_configure: Registered URI handlers");
 		

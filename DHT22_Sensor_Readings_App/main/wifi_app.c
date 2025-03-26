@@ -3,6 +3,7 @@
 /* FreeRTOS & event groups */
 #include "esp_event.h"
 #include "esp_event_base.h"
+#include "esp_interface.h"
 #include "esp_log_level.h"
 #include "esp_netif_types.h"
 #include "esp_wifi_default.h"
@@ -27,6 +28,12 @@
 
 /* Create a tag used for ESP Serial Console messages */
 static const char TAG[] = "wifi_app";
+
+/* Used for returning the wifi configuration */
+wifi_config_t *wifi_config = NULL;
+
+/* Used to track the # of retries when a connection attempt fails */
+static int g_retry_number;
 
 /* Create a queue handle */
 static QueueHandle_t wifi_app_queue_handle;
@@ -77,6 +84,22 @@ static void wifi_app_event_handler(void *arg, esp_event_base_t event_base, int32
 			case WIFI_EVENT_STA_DISCONNECTED:
 			/* Logged when the ESP32 disconnects from the WiFi network that it was connected to */
 				ESP_LOGI(TAG, "WIFI_EVENT_STA_DISCONNECTED");
+				
+				/* Print some disconnected error codes */
+				wifi_event_sta_disconnected_t *wifi_event_sta_disconnected = (wifi_event_sta_disconnected_t*) malloc(sizeof(wifi_event_sta_disconnected_t));
+				*wifi_event_sta_disconnected = *((wifi_event_sta_disconnected_t*)event_data);
+				printf("WIFI_EVENT_STA_DISCONNECTED, reason code %d\n", wifi_event_sta_disconnected->reason);
+				
+				/* Implement some WiFi connection retry logic - since we are in the STA_DISCONNECTED case, we need to connect again */
+				if(g_retry_number < MAX_CONNECTION_RETRIES){
+					esp_wifi_connect();
+					g_retry_number++;
+				}
+				else{
+					/* Send a disconnect message */
+					wifi_app_send_message(WIFI_APP_MSG_STA_DISCONNECTED);
+				}
+				
 				break;
 		}
 	}
@@ -85,6 +108,9 @@ static void wifi_app_event_handler(void *arg, esp_event_base_t event_base, int32
 			case IP_EVENT_STA_GOT_IP:
 			/* Logged when the ESP32 operating as a station, obtains an IP address from the connected WiFi network */
 				ESP_LOGI(TAG, "IP_EVENT_STA_GOT_IP");
+				
+				/* Send got ip message */
+				wifi_app_send_message(WIFI_APP_MSG_STA_CONNECTED_GOT_IP);
 				break;
 		}
 	}
@@ -176,6 +202,13 @@ static void wifi_app_soft_ap_config(void){
 	ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_STA_POWER_SAVE));
 }
 
+/* Connects the ESP 32 to an external access point using the updated station configuration */
+static void wifi_app_connect_sta(void){
+	ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, wifi_app_get_wifi_config()));
+	ESP_ERROR_CHECK(esp_wifi_connect());
+}
+
+
 /* Define the main task for the wifi application 
    - Initialize wifi, receive all queue messages which determines the flow of the application
    - We'll need to define some set of functions which initialize the event handler and the TCP IP stack & the wifi config as well as softap config
@@ -213,11 +246,29 @@ static void wifi_app_task(void *pvParameters){
 				
 			case WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER:
 				ESP_LOGI(TAG, "WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER");
+				/* Attempt a connection */
+				wifi_app_connect_sta();
+				
+				/* Set current number of retries to 0 */
+				g_retry_number = 0;
+				
+				/* Let the HTTP server know about the connection attempt */
+				http_server_monitor_send_message(HTTP_MSG_WIFI_CONNECT_INIT);
 				break;
 				
 			case WIFI_APP_MSG_STA_CONNECTED_GOT_IP:
 				ESP_LOGI(TAG, "WIFI_APP_MSG_STA_CONNECTED_GOT_IP");
 				rgb_led_wifi_connected();
+				
+				/* Send message to HTTP server monitor */
+				http_server_monitor_send_message(HTTP_MSG_WIFI_CONNECT_SUCCESS);
+				break;
+				
+			case WIFI_APP_MSG_STA_DISCONNECTED:
+				ESP_LOGI(TAG, "WIFI_APP_MSG_STA_DISCONNECTED");
+				
+				/* Send fail message to HTTP server monitor */
+				http_server_monitor_send_message(HTTP_MSG_WIFI_CONNECT_FAIL);
 				break;
 				
 			default:
@@ -241,6 +292,11 @@ BaseType_t wifi_app_send_message(wifi_app_message_e msgID){
 	return xQueueSend(wifi_app_queue_handle, &msg, portMAX_DELAY);
 }
 
+wifi_config_t* wifi_app_get_wifi_config(void){
+	/* This is the global variable up top */
+	return wifi_config;
+}
+
 /* defines/starts the WiFi RTOS task and handle some initializations as well*/
 void wifi_app_start(void){
 	ESP_LOGI(TAG, "STARTING WIFI APPLICATION");
@@ -250,6 +306,10 @@ void wifi_app_start(void){
 	
 	/* disable default wifi logging messages - will log way too many messages */
 	esp_log_level_set("wifi", ESP_LOG_NONE);
+	
+	/* Allocate memory for the WiFi configuration */
+	wifi_config = (wifi_config_t*)malloc(sizeof(wifi_config_t));
+	memset(wifi_config, 0x00, sizeof(wifi_config));
 	
 	/* Create a message queue using the queue handle */
 	wifi_app_queue_handle = xQueueCreate(3, sizeof(wifi_app_queue_message_t));
