@@ -107,6 +107,11 @@ static void http_server_monitor(void *parameter){
 					g_wifi_connect_status = HTTP_MSG_WIFI_CONNECT_FAIL;
 					break;
 					
+				case HTTP_MSG_WIFI_USER_DISCONNECT:
+					ESP_LOGI(TAG, "HTTP_MSG_WIFI_USER_DISCONNECT");
+					g_wifi_connect_status = HTTP_WIFI_STATUS_DISCONNECTED;
+					break;
+					
 				case HTTP_MSG_OTA_UPDATE_SUCCESSFUL:
 					ESP_LOGI(TAG, "HTTP_MSG_OTA_UPDATE_SUCCESSFUL");
 					g_fw_update_status = OTA_UPDATE_SUCCESSFUL; 
@@ -657,6 +662,10 @@ void http_server_fw_update_reset_callback(void *arg){
 	ESP_LOGI(TAG, "http_server_fw_update_reset_callback: Timer timed out, restarting the device");
 	esp_restart();
 }
+
+
+
+
 
 
 

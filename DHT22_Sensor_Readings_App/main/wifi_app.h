@@ -25,7 +25,7 @@
 #define WIFI_AP_BANDWIDTH		WIFI_BW_HT20    // From WiFi driver for 20 MHz bandwidth, 40 MHz is also an option
 #define WIFI_STA_POWER_SAVE		WIFI_PS_NONE    // Disable modem sleep (more power consumption, but less latency in receiving data)
 #define MAX_SSID_LENGTH			32				// IEEE Standard Maximum
-#define MAX_PASSWORD_LENGth		64				// IEEE Standard
+#define MAX_PASSWORD_LENGTH  	64				// IEEE Standard
 #define MAX_CONNECTION_RETRIES	5				// Retry number on disconnect
 
 /* Create the network interface objects for the station & access point - `extern` so visible everywhere */
@@ -40,7 +40,8 @@ typedef enum wifi_app_message{
 	WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER,   // (value 1) lets wifi app know when we are connecting via HTTP server
 	WIFI_APP_MSG_STA_CONNECTED_GOT_IP,			// (value 2) used to let wifi app know when the ESP is connected to external access point/router and has been assigned IP addr
 	WIFI_APP_MSG_STA_DISCONNECTED,
-	WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT,		
+	WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT,	
+	WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS,	
 } wifi_app_message_e;
 
 /* Create a structure for the message queue. msgID will hold the value of the corresponding element (0, 1, 2) of the assigned element in wifi_app_message_e*/
