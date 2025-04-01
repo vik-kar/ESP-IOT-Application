@@ -662,10 +662,3 @@ void http_server_fw_update_reset_callback(void *arg){
 	ESP_LOGI(TAG, "http_server_fw_update_reset_callback: Timer timed out, restarting the device");
 	esp_restart();
 }
-
-
-
-
-
-
-

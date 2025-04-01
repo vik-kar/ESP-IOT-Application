@@ -3,6 +3,7 @@
 #include "DHT22.h"
 #include "nvs_flash.h"
 #include "wifi_app.h"
+#include "wifi_reset_button.h"
 
 
 void app_main(void){
@@ -18,6 +19,9 @@ void app_main(void){
 	
 	/* start WiFi */
 	wifi_app_start();
+	
+	/* Configure the WiFi reset button */
+	wifi_reset_button_config();
 	
 	/* Start reading DHT22 */
 	DHT22_task_start();

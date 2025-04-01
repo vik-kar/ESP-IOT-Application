@@ -43,6 +43,9 @@ const int WIFI_APP_CONNECTING_USING_SAVED_CREDS_BIT 		= BIT0; //(1U << 0)
 const int WIFI_APP_CONNECTING_FROM_HTTP_SERVER_BIT			= BIT1; //(1U << 1)
 const int WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT_BIT	= BIT2; //(1U << 2)
 
+/* we need another status bit to indicate that the ESP32 is indeed connected to an AP before reacting to disconnect button press */
+const int WIFI_APP_STA_CONNECTED_GOT_IP_BIT					= BIT3;
+
 
 /* Create a queue handle */
 static QueueHandle_t wifi_app_queue_handle;
@@ -292,6 +295,8 @@ static void wifi_app_task(void *pvParameters){
 				ESP_LOGI(TAG, "WIFI_APP_MSG_STA_CONNECTED_GOT_IP");
 				rgb_led_wifi_connected();
 				
+				xEventGroupSetBits(wifi_app_event_group, WIFI_APP_STA_CONNECTED_GOT_IP_BIT);
+				
 				/* Send message to HTTP server monitor */
 				http_server_monitor_send_message(HTTP_MSG_WIFI_CONNECT_SUCCESS);
 				
@@ -314,6 +319,29 @@ static void wifi_app_task(void *pvParameters){
 				}
 			break;
 				
+			case WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT:
+				ESP_LOGI(TAG, "WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT");
+				
+				eventBits = xEventGroupGetBits(wifi_app_event_group);
+				
+				if(eventBits & WIFI_APP_STA_CONNECTED_GOT_IP_BIT){
+					/* Set the event group bit */
+					xEventGroupSetBits(wifi_app_event_group, WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT_BIT);
+					
+					/* We don't want to re-attempt a connection when the disconnect button is pressed */
+					g_retry_number = MAX_CONNECTION_RETRIES;
+					
+					ESP_ERROR_CHECK(esp_wifi_disconnect());
+					
+					/* clear NVS credentials */
+					app_nvs_clear_sta_creds();
+					
+					/* Change RGB LED Status - in this case, this function means that WiFi is disconnected */
+					rgb_led_http_server_started();
+				}
+				
+			break;
+			
 			case WIFI_APP_MSG_STA_DISCONNECTED:
 				ESP_LOGI(TAG, "WIFI_APP_MSG_STA_DISCONNECTED");
 				
@@ -347,24 +375,10 @@ static void wifi_app_task(void *pvParameters){
 					ESP_LOGI(TAG, "WIFI_APP_MSG_STA_DISCONNECTED: Attempt failed, check WiFi access point availability");
 					
 				}
-			break;
-				
-			case WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT:
-				ESP_LOGI(TAG, "WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT");
-				
-				/* Set the event group bit */
-				xEventGroupSetBits(wifi_app_event_group, WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT_BIT);
-				
-				/* We don't want to re-attempt a connection when the disconnect button is pressed */
-				g_retry_number = MAX_CONNECTION_RETRIES;
-				
-				ESP_ERROR_CHECK(esp_wifi_disconnect());
-				
-				/* clear NVS credentials */
-				app_nvs_clear_sta_creds();
-				
-				/* Change RGB LED Status - in this case, this function means that WiFi is disconnected */
-				rgb_led_http_server_started();
+				if(eventBits & WIFI_APP_STA_CONNECTED_GOT_IP_BIT){
+					/* Clear the got_ip_bit from event group */
+					xEventGroupClearBits(wifi_app_event_group, WIFI_APP_STA_CONNECTED_GOT_IP_BIT);
+				}
 				
 			break;
 				

@@ -23,6 +23,11 @@
 #define HTTP_SERVER_MONITOR_PRIORITY		3
 #define HTTP_SERVER_MONITOR_CORE_ID			0
 
+/* WiFi reset button task */
+#define WIFI_RESET_BUTTON_TASK_STACK_SIZE   2048
+#define WIFI_RESET_BUTTON_TASK_PRIORITY		6
+#define WIFI_RESET_BUTTON_TASK_CORE_ID		0
+
 /* Define parameters for DHT22 functions */
 #define DHT22_TASK_STACK_SIZE				4096
 #define DHT22_TASK_PRIORITY					5
