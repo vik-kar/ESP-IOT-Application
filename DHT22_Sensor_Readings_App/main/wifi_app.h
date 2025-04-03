@@ -1,16 +1,12 @@
-/*
- * wifi_app.h
- *
- *  Created on: Feb 27, 2025
- *      Author: vikramkarmarkar
- */
-
 #ifndef MAIN_WIFI_APP_H_
 #define MAIN_WIFI_APP_H_
 
 #include "esp_netif.h"
 #include "esp_wifi_types_generic.h"
 #include "portmacro.h"
+
+/* Callback typdef */
+typedef void (*wifi_connected_event_callback_t)(void);
 
 /* Define the WiFi app settings */
 #define WIFI_AP_SSID			"ESP32_AP" 		//access point name - Service Set Identifier
@@ -60,5 +56,11 @@ void wifi_app_start(void);
 
 /* Gets the wifi configuration */
 wifi_config_t* wifi_app_get_wifi_config(void);
+
+/* Sets the callback function */
+void wifi_app_set_callback(wifi_connected_event_callback_t cb);
+
+/* calls the callback function */
+void wifi_app_call_callback(void);
 
 #endif /* MAIN_WIFI_APP_H_ */

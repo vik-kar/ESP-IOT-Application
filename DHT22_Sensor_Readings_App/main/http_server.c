@@ -16,6 +16,7 @@
 #include "sys/param.h"
 #include "DHT22.h"
 #include "esp_wifi.h"
+#include "sntp_time_sync.h"
 
 /* Tag used for ESP serial console messages */
 static const char TAG[] = "http_server";
@@ -25,6 +26,9 @@ static int g_wifi_connect_status = NONE;
 
 /* Global var for fw update status */
 static int g_fw_update_status = OTA_UPDATE_PENDING;
+
+/* variable to see if time is set or not (local time status) */
+static bool g_is_local_time_set = 0;
 
 /* Create HTTP Server Task handle 
    - This is the HTTP server instance handle that we'll need to use when we call various functions from the API
@@ -125,6 +129,11 @@ static void http_server_monitor(void *parameter){
 					
 				case HTTP_MSG_OTA_UPDATE_INITIALIZED:
 					ESP_LOGI(TAG, "HTTP_MSG_OTA_UPDATE_INITIALIZED");
+					break;
+
+				case HTTP_MSG_TIME_SERVICE_INITIALIZED:
+					ESP_LOGI(TAG, "HTTP_MSG_TIME_SERVICE_INITIALIZED");
+					g_is_local_time_set = 1;
 					break;
 					
 				default:
@@ -473,6 +482,28 @@ static esp_err_t http_server_wifi_disconnect_json_handler(httpd_req_t *req){
 	return ESP_OK;
 }
 
+/* localTime.json responds by sending the local time
+   @param req HTTP request for which the URI needs to be handled
+   @ret ESP_OK
+*/
+static esp_err_t http_server_get_local_time_json_handler(httpd_req_t *req){
+	ESP_LOGI(TAG, "/localTime.json requested");
+
+	/* 100 byte buffer set to 0 */
+	char localTimeJson[100] = {0};
+
+	/* use a global variable to see if the time was set. If it is set, the current local time is formatted into the JSON buffer with sprintf */
+	if (g_is_local_time_set){
+		sprintf(localTimeJson, "{\"time\":\"%s\"}", sntp_time_sync_get_time());
+	}
+
+	/* Set response type */
+	httpd_resp_set_type(req, "application/json");
+	httpd_resp_send(req, localTimeJson, strlen(localTimeJson));
+
+	return ESP_OK;
+}
+
 /* Sets up the default HTTPD server configuration 
    @return http server instance handle if successful, null otherwise
 */
@@ -618,6 +649,15 @@ static httpd_handle_t http_server_configure(void){
 			.user_ctx = NULL,
 		};
 		httpd_register_uri_handler(http_server_handle, &wifi_disconnect_json);
+
+		/* Register the handler to get local time */
+		httpd_uri_t local_time_json = {
+			.uri = "/localTime.json",
+			.method = HTTP_GET,
+			.handler = http_server_get_local_time_json_handler,
+			.user_ctx = NULL,
+		};
+		httpd_register_uri_handler(http_server_handle, &local_time_json);
 		
 		ESP_LOGI(TAG, "http_server_configure: Registered URI handlers");
 		

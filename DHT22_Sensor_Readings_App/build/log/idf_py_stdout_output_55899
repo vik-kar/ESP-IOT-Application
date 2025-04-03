@@ -28,7 +28,7 @@ ota_1,app,ota_1,0x200000,1984K,
 -- Adding linker script /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/main/ld/esp32/bootloader.rom.ld
 -- Components: bootloader bootloader_support efuse esp_app_format esp_bootloader_format esp_common esp_hw_support esp_rom esp_security esp_system esptool_py freertos hal log main micro-ecc newlib partition_table soc spi_flash xtensa
 -- Component paths: /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader_support /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/efuse /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_app_format /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_bootloader_format /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_common /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_hw_support /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_rom /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_security /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esp_system /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/freertos /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/hal /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/log /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/main /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/bootloader/subproject/components/micro-ecc /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/newlib /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/partition_table /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/soc /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/spi_flash /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/xtensa
--- Configuring done (2.3s)
+-- Configuring done (1.7s)
 -- Generating done (0.0s)
 -- Build files have been written to: /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/bootloader
 [8/15] Performing build step for 'bootloader'
@@ -51,79 +51,15 @@ Merged 2 ELF sections
 Successfully created esp32 image.
 Generated /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/udemy_esp32_app.bin
 [14/15] cd /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esptool_py && /Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/partition_table/partition-table.bin /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/udemy_esp32_app.bin
-udemy_esp32_app.bin binary size 0x111410 bytes. Smallest app partition is 0x1f0000 bytes. 0xdebf0 bytes (45%) free.
+udemy_esp32_app.bin binary size 0x117f90 bytes. Smallest app partition is 0x1f0000 bytes. 0xd8070 bytes (44%) free.
 [14/15] cd /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py && /Users/vikramkarmarkar/.espressif/tools/cmake/3.30.2/CMake.app/Contents/bin/cmake -D IDF_PATH=/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4 -D "SERIAL_TOOL=/Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python;;/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/esptool/esptool.py;--chip;esp32" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build -P /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/run_serial_tool.cmake
 esptool.py --chip esp32 -p /dev/cu.usbserial-0001 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 40m --flash_size detect 0x1000 bootloader/bootloader.bin 0x10000 udemy_esp32_app.bin 0x8000 partition_table/partition-table.bin 0xd000 ota_data_initial.bin
 esptool.py v4.8.1
 Serial port /dev/cu.usbserial-0001
-Connecting...........
-Chip is ESP32-D0WD-V3 (revision v3.1)
-Features: WiFi, BT, Dual Core, 240MHz, VRef calibration in efuse, Coding Scheme None
-Crystal is 40MHz
-MAC: f4:65:0b:4a:99:c8
-Uploading stub...
-Running stub...
-Stub running...
-Changing baud rate to 460800
-Changed.
-Configuring flash size...
-Auto-detected Flash size: 4MB
-Flash will be erased from 0x00001000 to 0x00007fff...
-Flash will be erased from 0x00010000 to 0x00121fff...
-Flash will be erased from 0x00008000 to 0x00008fff...
-Flash will be erased from 0x0000d000 to 0x0000efff...
-SHA digest in image updated
-Compressed 25952 bytes to 16368...
-Writing at 0x00001000... (100 %)
-Wrote 25952 bytes (16368 compressed) at 0x00001000 in 0.8 seconds (effective 263.9 kbit/s)...
-Hash of data verified.
-Compressed 1119248 bytes to 585287...
-Writing at 0x00010000... (2 %)
-Writing at 0x0001cf10... (5 %)
-Writing at 0x000263a5... (8 %)
-Writing at 0x00042bfe... (11 %)
-Writing at 0x00056233... (13 %)
-Writing at 0x0006320c... (16 %)
-Writing at 0x0006dd17... (19 %)
-Writing at 0x00078aaa... (22 %)
-Writing at 0x0007ea80... (25 %)
-Writing at 0x00084678... (27 %)
-Writing at 0x0008a336... (30 %)
-Writing at 0x0008fec4... (33 %)
-Writing at 0x00095b14... (36 %)
-Writing at 0x0009b2f9... (38 %)
-Writing at 0x000a0f3d... (41 %)
-Writing at 0x000a6bf6... (44 %)
-Writing at 0x000aca50... (47 %)
-Writing at 0x000b2a07... (50 %)
-Writing at 0x000b866a... (52 %)
-Writing at 0x000be4cf... (55 %)
-Writing at 0x000c36de... (58 %)
-Writing at 0x000c8dc8... (61 %)
-Writing at 0x000ce577... (63 %)
-Writing at 0x000d386c... (66 %)
-Writing at 0x000d8da5... (69 %)
-Writing at 0x000de79c... (72 %)
-Writing at 0x000e4256... (75 %)
-Writing at 0x000e9d93... (77 %)
-Writing at 0x000efaea... (80 %)
-Writing at 0x000f5a5d... (83 %)
-Writing at 0x000fb442... (86 %)
-Writing at 0x00104e21... (88 %)
-Writing at 0x0010be99... (91 %)
-Writing at 0x00111abc... (94 %)
-Writing at 0x00117f81... (97 %)
-Writing at 0x0011d32a... (100 %)
-Wrote 1119248 bytes (585287 compressed) at 0x00010000 in 16.1 seconds (effective 554.9 kbit/s)...
-Hash of data verified.
-Compressed 3072 bytes to 128...
-Writing at 0x00008000... (100 %)
-Wrote 3072 bytes (128 compressed) at 0x00008000 in 0.1 seconds (effective 372.5 kbit/s)...
-Hash of data verified.
-Compressed 8192 bytes to 31...
-Writing at 0x0000d000... (100 %)
-Wrote 8192 bytes (31 compressed) at 0x0000d000 in 0.1 seconds (effective 836.6 kbit/s)...
-Hash of data verified.
 
-Leaving...
-Hard resetting via RTS pin...
+A fatal error occurred: Could not open /dev/cu.usbserial-0001, the port is busy or doesn't exist.
+([Errno 35] Could not exclusively lock port /dev/cu.usbserial-0001: [Errno 35] Resource temporarily unavailable)
+
+FAILED: CMakeFiles/flash /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/CMakeFiles/flash 
+cd /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py && /Users/vikramkarmarkar/.espressif/tools/cmake/3.30.2/CMake.app/Contents/bin/cmake -D IDF_PATH=/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4 -D "SERIAL_TOOL=/Users/vikramkarmarkar/.espressif/python_env/idf5.4_py3.9_env/bin/python;;/Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/esptool/esptool.py;--chip;esp32" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build -P /Users/vikramkarmarkar/esp-workspace/esp-idf-v5.4/components/esptool_py/run_serial_tool.cmake
+ninja: build stopped: subcommand failed.
