@@ -426,6 +426,14 @@ void wifi_app_call_callback(void){
 	wifi_connected_event_cb();
 }
 
+int8_t wifi_app_get_rssi(void){
+	wifi_ap_record_t wifi_data;
+
+	ESP_ERROR_CHECK(esp_wifi_sta_get_ap_info(&wifi_data));
+
+	return wifi_data.rssi;
+}
+
 /* defines/starts the WiFi RTOS task and handle some initializations as well*/
 void wifi_app_start(void){
 	ESP_LOGI(TAG, "STARTING WIFI APPLICATION");

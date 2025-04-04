@@ -3,6 +3,7 @@
 #include "esp_log.h"
 #include "DHT22.h"
 #include "nvs_flash.h"
+#include "aws_iot.h"
 #include "wifi_app.h"
 #include "wifi_reset_button.h"
 #include "sntp_time_sync.h"
@@ -15,6 +16,9 @@ void wifi_application_connected_events(void){
 	ESP_LOGI(TAG, "WiFi Application Connected");
 	
 	sntp_time_sync_task_start();
+	
+	/* AWS IOT Task starts when ESP32 is connected to the internet */
+	aws_iot_start();
 }
 
 

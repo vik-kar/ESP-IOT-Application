@@ -4,5 +4,8 @@ cmake_minimum_required(VERSION 3.5)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
+# Indicate where to find AWS IoT
+set(EXTRA_COMPONENT_DIRS "esp-aws-iot")
+
 # this will be the name of the application binary produced by the build
 project(udemy_esp32_app)

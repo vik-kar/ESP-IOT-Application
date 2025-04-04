@@ -504,6 +504,31 @@ static esp_err_t http_server_get_local_time_json_handler(httpd_req_t *req){
 	return ESP_OK;
 }
 
+/* apSSID.json responds by sending AP SSID of the ESP32
+   @param req HTTP request for which the URI needs to be handled
+   @ret ESP_OK
+*/
+static esp_err_t http_server_get_ap_ssid_json_handler(httpd_req_t *req){
+	ESP_LOGI(TAG, "./apSSIS.json requested");
+	
+	/* 50-byte buffer to store SSID */
+	char ssidJson[50];
+	
+	wifi_config_t *wifi_config = wifi_app_get_wifi_config();
+	
+	/* get information about the access point */
+	esp_wifi_get_config(ESP_IF_WIFI_AP, wifi_config);
+	
+	/* Extract SSID from config */
+	char *ssid = (char *) wifi_config->ap.ssid;
+	sprintf(ssidJson, "{\"ssid\":\"%s\"}", ssid);
+	
+	httpd_resp_set_type(req, "application/json");
+	httpd_resp_send(req, ssidJson, strlen(ssidJson));
+	
+	return ESP_OK;
+}
+
 /* Sets up the default HTTPD server configuration 
    @return http server instance handle if successful, null otherwise
 */
@@ -658,6 +683,15 @@ static httpd_handle_t http_server_configure(void){
 			.user_ctx = NULL,
 		};
 		httpd_register_uri_handler(http_server_handle, &local_time_json);
+		
+		/* Register the handler to get the AP SSID */
+		httpd_uri_t ap_ssid_json = {
+			.uri = "/apSSID.json",
+			.method = HTTP_GET,
+			.handler = http_server_get_ap_ssid_json_handler,
+			.user_ctx = NULL,
+		};
+		httpd_register_uri_handler(http_server_handle, &ap_ssid_json);
 		
 		ESP_LOGI(TAG, "http_server_configure: Registered URI handlers");
 		

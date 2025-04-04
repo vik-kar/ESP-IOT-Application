@@ -838,3 +838,10 @@
 /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/main/CMakeFiles/install.dir
 /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/main/CMakeFiles/install/local.dir
 /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/main/CMakeFiles/install/strip.dir
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/CMakeFiles/__idf_esp-aws-iot.dir
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/CMakeFiles/edit_cache.dir
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/CMakeFiles/rebuild_cache.dir
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/CMakeFiles/list_install_components.dir
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/CMakeFiles/install.dir
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/CMakeFiles/install/local.dir
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/CMakeFiles/install/strip.dir

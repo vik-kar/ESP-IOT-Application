@@ -82,3 +82,4 @@
 /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/spiffs/libspiffs.a
 /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
 /Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/main/libmain.a
+/Users/vikramkarmarkar/esp-workspace/udemy_esp32/build/esp-idf/esp-aws-iot/libesp-aws-iot.a

@@ -12,6 +12,7 @@ $(document).ready(function(){
     getUpdateStatus();
     startDHTSensorInterval();
     startLocalTimeInterval();
+    getSSID();
     getConnectInfo();
     $("#connect_wifi").on("click", function(){
     checkCredentials();
@@ -282,5 +283,12 @@ function startLocalTimeInterval(){
 function getLocalTime(){
     $.getJSON('/localTime.json', function(data) {
         $("#local_time").text(data["time"]);
+    })
+}
+
+/* This function gets the ESp32's access point SSID for displaying on the web page */
+function getSSID(){
+    $.getJSON('/apSSID.json', function(data) {
+        $("#ap_ssid").text(data["ssid"]);
     })
 }
