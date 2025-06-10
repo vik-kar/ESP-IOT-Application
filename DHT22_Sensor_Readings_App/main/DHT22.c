@@ -22,12 +22,16 @@
 #include <stdio.h>
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #include "freertos/task.h"
 #include "esp_system.h"
 #include "driver/gpio.h"
 
 #include "DHT22.h"
 #include "tasks_common.h"
+
+/* Semaphore Handle */
+static SemaphoreHandle_t dht_mutex = NULL;
 
 // == global defines =============================================
 
@@ -46,8 +50,16 @@ void setDHTgpio( int gpio )
 
 // == get temp & hum =============================================
 
-float getHumidity() { return humidity; }
-float getTemperature() { return temperature; }
+float getHumidity() {
+	if (dht_mutex) xSemaphoreTake(dht_mutex, portMAX_DELAY);
+	return humidity;
+	if (dht_mutex) xSemaphoreGive(dht_mutex);
+}
+float getTemperature() {
+	if (dht_mutex) xSemaphoreTake(dht_mutex, portMAX_DELAY);
+	return temperature;
+	if (dht_mutex) xSemaphoreGive(dht_mutex);
+}
 
 // == error handler ===============================================
 
@@ -210,15 +222,24 @@ uint8_t bitInx = 7;
 		// add the current read to the output data
 		// since all dhtData array where set to 0 at the start, 
 		// only look for "1" (>28us us)
+		
+		/* uSec value is the amount of time the pin is pulled high (it's the pulse duration). if uSec > 40, it's a 1 from the sensor, else it's a 0 
+		   Therefore, if uSec > 40, we shift a 1 into the current index in dhtData, to correctly get the binary data
+		*/
 	
 		if (uSec > 40) {
 			dhtData[ byteInx ] |= (1 << bitInx);
-			}
+		}
 	
 		// index to next byte
 
 		if (bitInx == 0) { bitInx = 7; ++byteInx; }
 		else bitInx--;
+	}
+
+	/* Obtain mutex, then modify variables */
+	if(dht_mutex){
+		xSemaphoreTake(dht_mutex, portMAX_DELAY);
 	}
 
 	// == get humidity from Data[0] and Data[1] ==========================
@@ -238,6 +259,10 @@ uint8_t bitInx = 7;
 	if( dhtData[2] & 0x80 ) 			// negative temp, brrr it's freezing
 		temperature *= -1;
 
+	/* release mutex after modifying variables */
+	if(dht_mutex){
+		xSemaphoreGive(dht_mutex);
+	}
 
 	// == verify if checksum is ok ===========================================
 	// Checksum is the sum of Data 8 bits masked out 0xFF
@@ -270,45 +295,7 @@ static void DHT22_task(void *pvParameter){
 }
 
 void DHT22_task_start(void){
+	/* Create the mutex */
+	dht_mutex = xSemaphoreCreateMutex();
 	xTaskCreatePinnedToCore(&DHT22_task, "DHT22_task", DHT22_TASK_STACK_SIZE, NULL, DHT22_TASK_PRIORITY, NULL, DHT22_TASK_CORE_ID);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
